@@ -1,4 +1,6 @@
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -15,7 +17,7 @@ orders_router = APIRouter(tags=["orders"])
     status_code=status.HTTP_201_CREATED
 )
 def create_order(
-    tenant_id: int,
+    tenant_id: UUID,
     payload: OrderCreate,
     db: Session = Depends(getdb)
 ):
@@ -45,7 +47,7 @@ def create_order(
     response_model=list[OrderRead]
 )
 def list_tenant_orders(
-    tenant_id: int,
+    tenant_id: UUID,
     db: Session = Depends(getdb)
 ):
     tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()

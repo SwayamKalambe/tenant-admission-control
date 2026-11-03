@@ -1,6 +1,7 @@
 """Tenant and workload API schemas."""
 
 from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 
@@ -12,7 +13,7 @@ class TenantCreate(BaseModel):
 class TenantRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: UUID
     name: str
     status: str
     created_at: datetime
@@ -23,7 +24,7 @@ class WorkloadRequest(BaseModel):
 
 
 class WorkloadResult(BaseModel):
-    tenant_id: int
+    tenant_id: UUID
     requested_workload: int
     status: str
     execution_time_seconds: float

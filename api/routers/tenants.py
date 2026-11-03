@@ -1,4 +1,6 @@
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -44,7 +46,7 @@ def list_tenants(db: Session = Depends(getdb)):
     response_model=TenantRead
 )
 def get_tenant(
-    tenant_id: int,
+    tenant_id: UUID,
     db: Session = Depends(getdb)
 ):
     tenant = db.query(Tenant).filter(

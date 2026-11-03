@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from decimal import Decimal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -14,8 +15,8 @@ class OrderCreate(BaseModel):
 class OrderRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    tenant_id: int
+    id: UUID
+    tenant_id: UUID
     item_name: str
     amount: Decimal
     created_at: datetime
