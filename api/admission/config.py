@@ -1,0 +1,8 @@
+class AdmissionConfig:
+    ENABLE_FIXED_ADMISSION = False
+    ENABLE_COST_AWARE_ADMISSION = True
+
+    TENANT_WORKLOAD_LIMIT = 20
+
+    GET_COST = 1
+    POST_COST = 2
