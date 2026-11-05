@@ -1,0 +1,63 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: tenant_db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - tenant_network
+
+
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: tenant_pgbouncer
+    restart: unless-stopped
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "6432:6432"
+
+    volumes:
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+
+    networks:
+      - tenant_network
+
+
+  api:
+    build: .
+    container_name: tenant_api
+    restart: unless-stopped
+
+    depends_on:
+      - pgbouncer
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@pgbouncer:6432/${POSTGRES_DB}
+
+    networks:
+      - tenant_network
+
+
+volumes:
+  postgres_data:
+
+
+networks:
+  tenant_network:
+    driver: bridge
